@@ -22,6 +22,12 @@ const pxToRemPlugin = ({ types: t }) => {
         const options = state.opts || {};
         const baseFontSize = options.baseFontSize || BASE_FONT_SIZE;
         const propertiesToConvert = options.properties || DEFAULT_PROPS;
+        const includeNodeModules = options.includeNodeModules || false;
+
+        // Skip node_modules unless explicitly included
+        if (!includeNodeModules && path.hub.file.opts.filename.includes("node_modules")) {
+          return;
+        }
 
         path.node.properties.forEach((property) => {
           if (!t.isObjectProperty(property) || !t.isIdentifier(property.key)) return;
