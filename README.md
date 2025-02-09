@@ -1,5 +1,9 @@
 # babel-plugin-px-to-rem
 
+A Babel plugin that converts pixel values to rem units in your JavaScript/JSX files.
+
+> **Note**: This plugin is designed to work with JSX/React syntax, making it perfect for React applications.
+
 A Babel plugin that automatically converts pixel values to rem units in your JavaScript and React code. This plugin handles both static values and dynamic values (variables, props, etc.).
 
 ## Features
