@@ -11,6 +11,7 @@ A Babel plugin that automatically converts pixel values to rem units in your Jav
 - Preserves values already in rem or em
 - Handles null, undefined, and other non-convertible values
 - Works with variables, props, and state values
+- Optional SVG support for proportional scaling of SVG elements
 
 ## Installation
 
@@ -30,7 +31,8 @@ yarn add -D babel-plugin-px-to-rem
     ["babel-plugin-px-to-rem", {
       "baseFontSize": 16,
       "properties": ["width", "height", "padding", "margin"],
-      "includeNodeModules": false
+      "includeNodeModules": false,
+      "isConvertSvgs": false
     }]
   ]
 }
@@ -44,7 +46,8 @@ module.exports = {
     ['babel-plugin-px-to-rem', {
       baseFontSize: 16,
       properties: ['width', 'height', 'padding', 'margin'],
-      includeNodeModules: false
+      includeNodeModules: false,
+      isConvertSvgs: false
     }]
   ]
 };
@@ -67,7 +70,8 @@ module.exports = {
               ['babel-plugin-px-to-rem', {
                 baseFontSize: 16,
                 properties: ['width', 'height', 'padding', 'margin'],
-                includeNodeModules: false
+                includeNodeModules: false,
+                isConvertSvgs: false
               }]
             ]
           }
@@ -102,38 +106,36 @@ export default defineConfig({
       ['babel-plugin-px-to-rem', {
         baseFontSize: 16,
         properties: ['width', 'height', 'padding', 'margin'],
-        includeNodeModules: false
+        includeNodeModules: false,
+        isConvertSvgs: false
       }]
     ]
   }
 });
 ```
 
-### With Rollup
+## Configuration Options
 
-```javascript
-// rollup.config.js
-import babel from '@rollup/plugin-babel';
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `baseFontSize` | number | 16 | The base font size in pixels to calculate rem values |
+| `properties` | string[] | [see default list] | Array of CSS properties to convert |
+| `includeNodeModules` | boolean | false | Whether to process files in node_modules |
+| `isConvertSvgs` | boolean | false | When true, converts SVG-specific properties to rem units for proportional scaling |
 
-export default {
-  input: 'src/index.js',
-  output: {
-    file: 'dist/bundle.js',
-    format: 'esm'
-  },
-  plugins: [
-    babel({
-      plugins: [
-        ['babel-plugin-px-to-rem', {
-          baseFontSize: 16,
-          properties: ['width', 'height', 'padding', 'margin'],
-          includeNodeModules: false
-        }]
-      ]
-    })
-  ]
-};
-```
+### SVG Support
+
+When `isConvertSvgs` is set to `true`, the plugin will convert the following SVG-specific properties to rem units:
+
+- Basic dimensions: `width`, `height`
+- Position attributes: `x`, `y`, `cx`, `cy`
+- Shape attributes: `r`, `rx`, `ry`, `x1`, `x2`, `y1`, `y2`
+- Stroke properties: `strokeWidth`, `strokeDasharray`, `strokeDashoffset`
+- Text properties: `fontSize`, `letterSpacing`, `baselineShift`, `kerning`, `wordSpacing`
+- Marker properties: `markerHeight`, `markerWidth`, `refX`, `refY`
+- Path-specific: `pathLength`, `points` (for polygon/polyline), `d` (for path)
+
+This is particularly useful when you want SVG elements to scale proportionally with the root font size, enabling responsive scaling across different screen sizes.
 
 ## Options
 
